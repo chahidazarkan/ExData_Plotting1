@@ -22,20 +22,26 @@ hpc <- tbl_df(hpc)
 
 #convert the date variable to a proper date
 hpc$Date <- dmy(hpc$Date)
-#hpc$Time <- hms(hpc$Time)
 
 #subset hpc
-hpc <- select(hpc, Date, Global_active_power)
+hpc <- select(hpc, Date, Time, Global_active_power)
 hpc <- filter(hpc, Date>="2007-02-01" & Date<"2007-02-03")
+
+#make a new variable DateTime
+hpc$DateTime <- paste(hpc$Date, hpc$Time)
+
+#convert DateTime and Time to time variables
+hpc$Time <- hms(hpc$Time)
+hpc$DateTime <- hpc$DateTime <- ymd_hms(hpc$DateTime)
 
 #convert global_active_power to numeric
 hpc$Global_active_power <- as.numeric(as.character(hpc$Global_active_power))
 
 #open a connection to a file
-png(filename="plot1.png", bg="transparent")
+png(filename="plot2.png", bg="transparent")
 
-#make the histogram
-hist(hpc$Global_active_power, col="red", xlab="Global Active Power (kilowatts)", ylab="Frequency", main="Global Active Power")
+#make the linegraph
+plot(hpc$DateTime, hpc$Global_active_power, xlab= " ", ylab="Global Active Power (kilowatts)", type="l")
 
 #close the connection
 dev.off()
